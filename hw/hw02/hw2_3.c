@@ -65,19 +65,17 @@ void copyAttributes(char *srcPath, char *destPath){
 	//}
 	
 	time_t modiTime = statBuff.st_mtime;
+	//timeInfo = localtime(&modiTime);
 	timeInfo = localtime(&modiTime);
-	printf("%ld\n", modiTime);
-	printf("%d\n", timeInfo->tm_year+1900);
-	printf("%d\n", timeInfo->tm_mon+1);
-
-	printf("attributes of file %s\n", srcPath);
+	
+	printf("attributes of file \"%s\"\n", srcPath);
 	printf("\tst_dev = %ld\n",statBuff.st_dev);
 	printf("\tst_mode = %d\n",statBuff.st_mode);
 	printf("\tst_uid = %d\n", statBuff.st_uid);
 	printf("\tst_gid = %d\n", statBuff.st_gid);
 	printf("\tst_size = %ld\n", statBuff.st_size);
 	printf("\tst_mtime = %ld\n", statBuff.st_mtime);
-	//printf("\tactime = %ld\n", timeBuff.actime);
-	//printf("\tmodtime = %ld\n", timeBuff.modtime);
+	printf("\t%02d/%02d/%02d %02d:%02d:%02d\n", timeInfo->tm_year+1900,timeInfo->tm_mon+1,timeInfo->tm_mday,timeInfo->tm_hour,timeInfo->tm_min, timeInfo->tm_sec);
+	printf("File attribures were successfully copied.\n");
 	return;
 }
