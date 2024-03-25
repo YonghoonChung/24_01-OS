@@ -19,14 +19,9 @@
 #define FALSE 0
 #define BUFFER_SIZE 512 
 
-void copyFile(char *srcPath, char *destPath);
 void copyAttributes(char *rcPath, char *destPath);
 
 int main (int argc, char *argv[]){
-	//for(int i = 0; i <= argc; i++){
-	//	printf("argv[%d] = \"%s\"\n",i,argv[i]);
-	//}
-
 	if(argc < 3){
 		printf("Usage: %s <src_path> <dest_path>\n", argv[0]);
 		return 0;
@@ -34,39 +29,55 @@ int main (int argc, char *argv[]){
 	char *srcPath = argv[1];
 	char *destPath = argv[2];
 	int choice;
-	if (strcmp(srcPath, destPath) == FALSE) {
-		printf("You have called the source path and destination path the same.\n");
-		printf("If you continue, the message in the source path will be removed.\n");
-		printf("Do you still want it? (Yes : 1, No : 0) ");
-		scanf("%d", &choice);
 
-		if (choice == FALSE) return 0;
-		
-	}
+
 	copyAttributes(srcPath, destPath);
 	return 0;
 }
 
 void copyAttributes(char *srcPath, char *destPath){
-	// Copy the Attributes
 	struct stat statBuff;
 	struct tm *timeInfo;
-	//struct utimbuf timeBuff;
-
-	int source = stat(srcPath, &statBuff);
-	if(source <0){
+	struct utimbuf timeBuff;
+	
+	//Loading the status of srcPath
+	int statSuccess = stat(srcPath, &statBuff);
+	if(statSuccess < 0){
 		printf("Error Occurred while loading stat information\n");
 		return;
 	}
-	//int time = utime(srcPath, &timeBuff);
-	//if(time < 0){
-	//	printf("Error Occurred while loading time information\n");
-	//	return;
-	//}
 	
-	time_t modiTime = statBuff.st_mtime;
-	//timeInfo = localtime(&modiTime);
-	timeInfo = localtime(&modiTime);
+	// Copying the Time (srcPath -> destPath)
+	timeBuff.actime = statBuff.st_atime;
+	timeBuff.modtime = statBuff.st_mtime;
+
+	int utimeSuccess = utime(destPath, &timeBuff);
+	if(utimeSuccess < 0){
+		printf("Copying time info occurred error\n");
+		return;
+	}
+
+	// Copying the Mode
+	int chmodSuccess = chmod(destPath, statBuff.st_mode);
+	if(chmodSuccess < 0){
+		printf("Copying mod info occurred error\n");
+		return;
+	}
+	
+	// Copying the uid, gid
+	int chownSuccess = chown(destPath, statBuff.st_uid, statBuff.st_gid);
+	if(chownSuccess< 0){
+		printf("Copying owner info occurred error\n");
+		return;
+	}
+	// Displaying modified time(in Linux timestamp) to YYYY/MM/DD HH:MM:SS
+	statSuccess = stat(destPath, &statBuff);
+	if(statSuccess < 0){
+		printf("Error Occurred while loading stat information\n");
+		return;
+	}
+
+	timeInfo = localtime(&statBuff.st_mtime);
 	
 	printf("attributes of file \"%s\"\n", srcPath);
 	printf("\tst_dev = %ld\n",statBuff.st_dev);
