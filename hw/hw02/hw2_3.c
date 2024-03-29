@@ -71,11 +71,11 @@ void copyAttributes(char *srcPath, char *destPath){
 		return;
 	}
 	// Displaying modified time(in Linux timestamp) to YYYY/MM/DD HH:MM:SS
-	statSuccess = stat(destPath, &statBuff);
-	if(statSuccess < 0){
-		printf("Error Occurred while loading stat information\n");
-		return;
-	}
+	//statSuccess = stat(destPath, &statBuff);
+	//if(statSuccess < 0){
+	//	printf("Error Occurred while loading stat information\n");
+	//	return;
+	//}
 
 	timeInfo = localtime(&statBuff.st_mtime);
 	
