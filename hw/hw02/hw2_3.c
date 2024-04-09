@@ -19,18 +19,20 @@
 #define FALSE 0
 #define BUFFER_SIZE 512 
 
-void copyAttributes(char *rcPath, char *destPath);
+void copyAttributes(char *srcPath, char *destPath);
 
 int main (int argc, char *argv[]){
-	if(argc < 3){
+	if(argc != 3){
 		printf("Usage: %s <src_path> <dest_path>\n", argv[0]);
 		return 0;
 	}
 	char *srcPath = argv[1];
 	char *destPath = argv[2];
-	int choice;
 
-
+	if (strcmp(srcPath, destPath) == FALSE) {
+		printf("\'%s\' and \'%s\' are the same file.\n", srcPath, destPath);
+		return 0;
+	}
 	copyAttributes(srcPath, destPath);
 	return 0;
 }
@@ -40,6 +42,19 @@ void copyAttributes(char *srcPath, char *destPath){
 	struct tm *timeInfo;
 	struct utimbuf timeBuff;
 	
+	int source = open(srcPath, O_RDONLY);
+	int destination = open(destPath, O_WRONLY | O_CREAT,0600);
+
+	if(source<0){
+		printf("\'%s\' does not exist\n", srcPath);
+		return;
+	}
+
+	if (destination == -1) {
+		printf("Error Occured: %s\n", strerror(errno));
+	}
+
+
 	//Loading the status of srcPath
 	int statSuccess = stat(srcPath, &statBuff);
 	if(statSuccess < 0){
@@ -81,12 +96,23 @@ void copyAttributes(char *srcPath, char *destPath){
 	
 	printf("attributes of file \"%s\"\n", srcPath);
 	printf("\tst_dev = %ld\n",statBuff.st_dev);
-	printf("\tst_mode = %d\n",statBuff.st_mode);
+	printf("\tst_mode = %o\n",statBuff.st_mode);
 	printf("\tst_uid = %d\n", statBuff.st_uid);
 	printf("\tst_gid = %d\n", statBuff.st_gid);
 	printf("\tst_size = %ld\n", statBuff.st_size);
 	printf("\tst_mtime = %ld\n", statBuff.st_mtime);
-	printf("\t%02d/%02d/%02d %02d:%02d:%02d\n", timeInfo->tm_year+1900,timeInfo->tm_mon+1,timeInfo->tm_mday,timeInfo->tm_hour,timeInfo->tm_min, timeInfo->tm_sec);
+	printf("\tmodified time = %02d/%02d/%02d %02d:%02d:%02d\n", timeInfo->tm_year+1900,timeInfo->tm_mon+1,timeInfo->tm_mday,timeInfo->tm_hour,timeInfo->tm_min, timeInfo->tm_sec);
 	printf("File attribures were successfully copied.\n");
+
+	if(close(source)<0){
+		printf("Failed to close srcPath \'%s\'.\n", srcPath );
+		return;
+	}
+
+	if(close(destination)<0){
+		printf("Failed to close destPath \'%s\'.\n", destPath );
+	 	return;
+	}
+
 	return;
 }

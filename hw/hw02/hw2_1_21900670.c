@@ -25,7 +25,7 @@ Word word[50];
 
 // previous code
 //int noWords = 0; // rather than making the global variable, use the local variable
-
+//
 // void words(char text[], int size);
 int words(char text[], int size);
 
@@ -45,7 +45,7 @@ int main(){
 	int noWords = words(text,strlen(text));
 	printf("             ");
 	
-	//updated code 
+	// updated code 
 	for (int i = 0; i<word[0].start;i++){ 	// It is not critical but added for the space in the beginning
 		printf(" ");
 	}
