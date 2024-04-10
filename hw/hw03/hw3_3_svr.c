@@ -24,6 +24,7 @@ int main(int argc, char* argv[]){
 		printf("Usage: %s <shard_mem_name>\n", argv[0]);
 		return 0;
 	}
+	printf("Welcome to my remote shell server!\n");
 	strcpy(shm_name, argv[1]);
 	// printf("shared Memory name = %s\n", argv[1]);
 	int shm_fd = shm_open(shm_name, O_CREAT | O_RDWR, 0666);
