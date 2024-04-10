@@ -43,15 +43,12 @@ int main(){
 		// change directory. -> implemented cd ~ as well.
 		if(strcmp(argv[0],"cd")==FALSE){
 			char* path = argv[1];
-			if(strcmp(argv[1], "~")==FALSE){
-				printf("Passed\n");
-				path = "/home/yonghoon";
-			}
+			if(strcmp(argv[1], "~")==FALSE)	path = "/home/yonghoon";
+			
 			int ch = chdir(path);
-
-			if(ch == 0) printf("Success\n");
-			else printf("Could not find the Directory.\n");
-
+			if(ch != 0) printf("Could not find the Directory.\n");
+			
+			// Back to the starting of the loop
 			continue;
 		}
 		// start forking.
@@ -78,7 +75,7 @@ int splitString(char* cmd, char* argv[]){
 	int inWord = 0;
 
 	argv[argc] = &cmd[0];
-
+	
 	for (int i = 0; i < len; i++) {
         if (!isspace(cmd[i]) && !inWord) {
             inWord = 1; 
