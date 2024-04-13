@@ -36,7 +36,7 @@ int main(int argc, char* argv[]){
     }
     void* shm = mmap(0,SIZE, PROT_WRITE , MAP_SHARED, shm_fd, 0);
     if(shm == MAP_FAILED){
-        printf("mmap Error\n");
+        printf("Mmap Error occurred\n");
         return 0;
     }
 
@@ -47,8 +47,10 @@ int main(int argc, char* argv[]){
 		
         fgets(cmd, MAX_LEN, stdin);
         cmd[strlen(cmd) - 1] = '\0';
+		// Checking for the empty string.
 		if(emptyString(cmd)) continue;
 		
+		// Waiting until shm[0]
         while(strcmp((char*)shm, "")==TRUE){ // repeating until shm[0] == 0
             if(usleep(100000)==-1){
                 printf("usleep() error\n");
@@ -56,11 +58,13 @@ int main(int argc, char* argv[]){
             }
         }
 
-
+		// terminating the client
         if(strcmp(cmd, "exit") == FALSE) break;
-
+		
+		// Sending the data to the shm
         strcpy((char*)shm, cmd);
-        // printf("shm = %s\n", (char *)shm);
+
+		// Terminating both the server and client.
         if(strcmp(cmd, "exit_svr")==FALSE) break;
     }
     if(munmap(shm, SIZE)==-1){

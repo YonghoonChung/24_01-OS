@@ -75,7 +75,7 @@ int splitString(char* cmd, char* argv[]){
 	int inWord = 0;
 
 	argv[argc] = &cmd[0];
-	
+	// if character is not whitespace, and 	
 	for (int i = 0; i < len; i++) {
         if (!isspace(cmd[i]) && !inWord) {
             inWord = 1; 
