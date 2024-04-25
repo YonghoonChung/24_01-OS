@@ -12,7 +12,7 @@
 
 #define ESC 27
 
-//#define	MULTITHREAD
+#define	MULTITHREAD
 #ifdef	MULTITHREAD
 
 #define MAX_THREAD 16
@@ -62,12 +62,16 @@ int main(int argc, char *argv[])
 	int bar_len = 7;
 	int x = (screen_width - bar_len) / 2;
 	int dx = 1;
+#ifdef MULTITHREAD
 	int cy = screen_height / 2;
-
+#else
+	int cy = screen_height / 2;
+#endif
+	
 	while(1){
 		int prevx = x;
 
-		if(x + dx < 1 || x + dx + bar_len - 1 > screen_width)
+		if(x + dx < 1 || x + dx + bar_len - 1 > screen_width) // bouncing algorithm
 			dx = -dx;
 		x += dx;
 
@@ -76,7 +80,7 @@ int main(int argc, char *argv[])
 		else
 			gotoxy(prevx + bar_len - 1, cy);
 		putchar(' ');
-		DrawBar(x, cy, bar_len, '=');
+		DrawBar(x, cy, bar_len,'=');
 		
 		gotoxy(1, screen_height);
 		fflush(stdout);

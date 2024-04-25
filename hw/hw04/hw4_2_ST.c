@@ -31,7 +31,10 @@ void UpdateEnv(int width, int height, char env[2][MAX_HEIGHT][MAX_WIDTH], int cu
 int CountNeighbor(int x, int y, char env[MAX_HEIGHT][MAX_WIDTH]);
 void DisplayEnv(int width, int height, char env[MAX_HEIGHT][MAX_WIDTH]);
 
-//#define	MULTITHREAD
+#define	MULTITHREAD
+//#define DEBUG
+
+
 #ifdef	MULTITHREAD
 #define MAX_THREAD 64
 
@@ -45,7 +48,9 @@ typedef struct {
 
 void UpdateEnv_MT(int width, int height, char env[2][MAX_HEIGHT][MAX_WIDTH], int cur, int no_thread);
 void* ThreadFn(void *vparam);
-
+#ifdef DEBUG
+int test = 0;
+#endif 
 #endif	//	MULTITHREAD
 
 int main(int argc, char *argv[])
@@ -65,7 +70,7 @@ int main(int argc, char *argv[])
 	gotoxy(1, 1);
 	printf("Screen size = %d x %d\n", screen_width, screen_height);
 
-	InitializeEnv(screen_width, screen_height, environ);
+	InitializeEnv(screen_width, screen_height, environ); // waiting until ESC
 	gotoxy(1, screen_height + 1);
 	printf("Press ESC to stop.\n");
 
@@ -75,12 +80,13 @@ int main(int argc, char *argv[])
 		usleep(100000);
 
 		if(kbhit()){
-			if(getch() == ESC)
+			if(getch() == ESC){
 				break;
+			}
 		}
 
 #ifdef	MULTITHREAD
-		UpdateEnv(screen_width, screen_height, environ, cur, );
+		UpdateEnv_MT(screen_width, screen_height, environ, cur, no_thread);
 #else	//	MULTITHREAD
 		UpdateEnv(screen_width, screen_height, environ, cur);
 #endif	//	MULTITHREAD
@@ -88,7 +94,7 @@ int main(int argc, char *argv[])
 	}
 
 	gotoxy(1, screen_height + 1);
-	printf("Bye!                     \n");
+	printf("Bye!                    \n");
 
 	return 0;
 }
@@ -142,21 +148,21 @@ void InitializeEnv(int width, int height, char env[2][MAX_HEIGHT][MAX_WIDTH])
 
 void UpdateEnv(int width, int height, char env[2][MAX_HEIGHT][MAX_WIDTH], int cur)
 {
-	int next = 1 - cur;
+	int next = 1 - cur; // 실질적인 cur은 바뀌지 않는다.
 	for(int y = 1; y <= height; y++){
 		for(int x = 1; x <= width; x++){
 			int count = CountNeighbor(x, y, env[cur]);
 			switch(count){
 			case 2:
-				env[next][y][x] = env[cur][y][x];
+				env[next][y][x] = env[cur][y][x]; // no change
 				break;
 
 			case 3:
-				env[next][y][x] = '*';
+				env[next][y][x] = '*'; // add a star
 				break;
 
 			default:
-				env[next][y][x] = ' ';
+				env[next][y][x] = ' '; // kill
 				break;
 			}
 		}
@@ -202,14 +208,55 @@ void DisplayEnv(int width, int height, char env[MAX_HEIGHT][MAX_WIDTH])
 void UpdateEnv_MT(int width, int height, char env[2][MAX_HEIGHT][MAX_WIDTH], int cur, int no_thread)
 {
 	// TO DO: implement this function.
+	
+	pthread_t tid[no_thread];
+	ThreadParam param[no_thread];
+	for(int t = 0; t<no_thread; t++){
+		param[t].idx = t;
+		param[t].no_thread = no_thread;
+		param[t].width = width;
+		param[t].height = height;
+		param[t].env = env;
+		param[t].cur = cur;
+
+		pthread_create(&tid[t], NULL, ThreadFn, &param[t]);
+	}
+
+	for(int t = 0; t<no_thread; t++){
+		pthread_join(tid[t], NULL);
+	}
+#ifdef DEBUG
+	test++;
+#endif
 }
 
 void* ThreadFn(void *vparam)
 {
-	ThreadParam *param = (ThreadParam*)vparam;
-
 	// TO DO: implement this function.
 
+	ThreadParam *param = (ThreadParam*)vparam;
+	int next = 1 - param->cur;
+	for(int y = 1 + param->idx; y<= param->height; y+= param->no_thread){
+		for(int x = 1; x <= param->width; x++){
+			int count = CountNeighbor(x, y, param->env[param->cur]);
+			switch(count){
+			case 2:
+				param->env[next][y][x] = param->env[param->cur][y][x]; // no change
+				break;
+
+			case 3:
+				param->env[next][y][x] = '*'; // add a star
+				break;
+
+			default:
+				param->env[next][y][x] = ' '; // kill
+				break;
+			}
+		}
+#ifdef DEBUG
+	printf("%d) test %d ", param->idx, test);
+#endif
+	}
 	return NULL;
 }
 
