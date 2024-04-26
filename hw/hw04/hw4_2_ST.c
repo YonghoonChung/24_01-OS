@@ -61,6 +61,10 @@ int main(int argc, char *argv[])
 		return 0;
 	}
 	int no_thread = atoi(argv[1]);
+	if (no_thread>MAX_THREAD){
+		printf("Use the number of thread lower than %d\n", MAX_THREAD);
+		return 0;
+	}
 #endif	//	MULTITHREAD
 
 	int screen_width = getWindowWidth();

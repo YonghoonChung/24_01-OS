@@ -29,12 +29,12 @@ typedef struct {
 
 void* ThreadFn(void *vparam);
 
+
 int cont = TRUE;		// use this variable to terminate threads
 
 #endif	//	MULTITHREAD
 
 int DrawBar(int sx, int sy, int len, char c);
-int test = 0;
 int main(int argc, char *argv[]){
 #ifdef	MULTITHREAD
 	if(argc < 2){
@@ -50,7 +50,6 @@ int main(int argc, char *argv[]){
 
 	int screen_width = getWindowWidth();
 	int screen_height = getWindowHeight() - 3;
-	test =screen_height;
 	clrscr();
 	gotoxy(1, 1);
 	printf("screen size = %d x %d\n", screen_width, screen_height);
