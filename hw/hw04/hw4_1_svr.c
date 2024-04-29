@@ -1,5 +1,9 @@
 // I added a new line to show the finished message after clearing the shared memory which I did not wrote the successful message. After this, the code was clear and we checked that It does not have bug.
 
+/*
+ * comments from Changgun Lee : 
+ * 			Yonghoon needs to add close() on line 128
+ */
 
 #include <stdio.h>
 #include <fcntl.h>

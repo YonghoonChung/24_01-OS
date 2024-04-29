@@ -1,5 +1,9 @@
 // the code were clean and neat. However, they told me that I have made a critical mistake which was not closing the file descriptor. So I added a line. 
 
+/*
+ * comments from Changgun Lee : 
+ * 			Yonghoon needs to add close() on line 83
+ */
 #include <stdio.h>
 #include <fcntl.h>
 #include <sys/mman.h>

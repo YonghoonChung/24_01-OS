@@ -79,6 +79,7 @@ int main(int argc, char *argv[])
 	printf("Press ESC to stop.\n");
 
 	int cur = 0;
+	EnableCursor(FALSE);
 	while(1){
 		DisplayEnv(screen_width, screen_height, environ[cur]);
 		usleep(100000);
@@ -96,7 +97,7 @@ int main(int argc, char *argv[])
 #endif	//	MULTITHREAD
 		cur = 1 - cur;
 	}
-
+	EnableCursor(TRUE);
 	gotoxy(1, screen_height + 1);
 	printf("Bye!                    \n");
 
@@ -202,7 +203,7 @@ void DisplayEnv(int width, int height, char env[MAX_HEIGHT][MAX_WIDTH])
 	}
 	fflush(stdout);
 
-	EnableCursor(TRUE);
+	//EnableCursor(TRUE);
 
 	UnlockDisplay();
 }
@@ -223,7 +224,10 @@ void UpdateEnv_MT(int width, int height, char env[2][MAX_HEIGHT][MAX_WIDTH], int
 		param[t].env = env;
 		param[t].cur = cur;
 
-		pthread_create(&tid[t], NULL, ThreadFn, &param[t]);
+		if(pthread_create(&tid[t], NULL, ThreadFn, &param[t])){
+			printf("Error occured while creating thread\n");
+			return;
+		}
 	}
 
 	for(int t = 0; t<no_thread; t++){

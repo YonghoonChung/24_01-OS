@@ -64,6 +64,7 @@ int main(int argc, char *argv[]){
 	int bar_len = 7;
 	int cy = screen_height / 2;
 
+#ifdef MULTITHREAD
 	pthread_t tid[no_thread];
 	ThreadParam param[no_thread];
 	for(int t = 0; t<no_thread; t++){
@@ -86,6 +87,7 @@ int main(int argc, char *argv[]){
 	for(int t = 0; t<no_thread; t++){
 		pthread_join(tid[t], NULL);
 	}
+#endif
 	// Up to here
 	EnableCursor(TRUE);
 	gotoxy(1, screen_height);
