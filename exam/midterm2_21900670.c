@@ -7,7 +7,7 @@
 #include "Console.h"
 
 
-#define DEBUG	// comment-out this line after completion
+//#define DEBUG	// comment-out this line after completion
 
 #define TRUE 1
 #define FALSE 0
