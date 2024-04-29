@@ -192,9 +192,11 @@ void Shoot(int sx, int sy, int width)
 	param->sx = sx;
 	param->sy = sy;
 	param->width = width;
-
+	printf("%d %d\n", sx, sy);
 
 	pthread_create(&tid, NULL, ThreadFn, &param);
+
+	//pthread_join(tid,NULL);
 }
 void* ThreadFn(void *vparam)
 {
@@ -205,8 +207,13 @@ void* ThreadFn(void *vparam)
 	while(cont){
 		prevx = x;
 		x++;
-		Erase(prevx,y);
-		if(x == param->width)
+		Erase(prevx,y,MISSLE_LEN);
+		if(x == param->width){
+			break;
+		}
+		DrawObject(x,y,missile);
+		fflush(stdout);
+		usleep(100000);
 	}
 	return NULL;
 }
