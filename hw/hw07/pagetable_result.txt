@@ -1,0 +1,31 @@
+page file: pagetable.txt
+pagenum_bits = 3
+offset_bits = 2
+process_size = 24
+page_size = 4
+offset_mask = 3
+no_entry = 6
+logical    0 (0x0000) ==> physical    8 (0x0008)
+logical    1 (0x0001) ==> physical    9 (0x0009)
+logical    2 (0x0002) ==> physical   10 (0x000a)
+logical    3 (0x0003) ==> physical   11 (0x000b)
+logical    4 (0x0004) ==> physical   24 (0x0018)
+logical    5 (0x0005) ==> physical   25 (0x0019)
+logical    6 (0x0006) ==> physical   26 (0x001a)
+logical    7 (0x0007) ==> physical   27 (0x001b)
+logical    8 (0x0008) ==> physical    0 (0x0000)
+logical    9 (0x0009) ==> physical    1 (0x0001)
+logical   10 (0x000a) ==> physical    2 (0x0002)
+logical   11 (0x000b) ==> physical    3 (0x0003)
+logical   12 (0x000c) ==> physical    4 (0x0004)
+logical   13 (0x000d) ==> physical    5 (0x0005)
+logical   14 (0x000e) ==> physical    6 (0x0006)
+logical   15 (0x000f) ==> physical    7 (0x0007)
+logical   16 (0x0010) ==> physical   28 (0x001c)
+logical   17 (0x0011) ==> physical   29 (0x001d)
+logical   18 (0x0012) ==> physical   30 (0x001e)
+logical   19 (0x0013) ==> physical   31 (0x001f)
+logical   20 (0x0014) ==> physical   20 (0x0014)
+logical   21 (0x0015) ==> physical   21 (0x0015)
+logical   22 (0x0016) ==> physical   22 (0x0016)
+logical   23 (0x0017) ==> physical   23 (0x0017)
