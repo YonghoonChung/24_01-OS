@@ -1,0 +1,41 @@
+size = 5
+segment   0: limit = 1000, base = 1400
+segment   1: limit = 400, base = 6300
+segment   2: limit = 400, base = 4300
+segment   3: limit = 1100, base = 3200
+segment   4: limit = 1000, base = 4700
+Valid cases: 
+	(0, 0) --> 1400
+	(0, 500) --> 1900
+	(0, 999) --> 2399
+	(1, 0) --> 6300
+	(1, 200) --> 6500
+	(1, 399) --> 6699
+	(2, 0) --> 4300
+	(2, 200) --> 4500
+	(2, 399) --> 4699
+	(3, 0) --> 3200
+	(3, 550) --> 3750
+	(3, 1099) --> 4299
+	(4, 0) --> 4700
+	(4, 500) --> 5200
+	(4, 999) --> 5699
+Error cases: 
+Segmentation Fault! seg = 5, offset = 0
+	(5, 0) --> -1
+Segmentation Fault! seg = 0, offset = 1000
+segment 0: limit = 1000, base = 1400
+	(0, 1000) --> -1
+Segmentation Fault! seg = 1, offset = 400
+segment 1: limit = 400, base = 6300
+	(1, 400) --> -1
+Segmentation Fault! seg = 2, offset = 400
+segment 2: limit = 400, base = 4300
+	(2, 400) --> -1
+Segmentation Fault! seg = 3, offset = 1100
+segment 3: limit = 1100, base = 3200
+	(3, 1100) --> -1
+Segmentation Fault! seg = 4, offset = 1000
+segment 4: limit = 1000, base = 4700
+	(4, 1000) --> -1
+Bye!
